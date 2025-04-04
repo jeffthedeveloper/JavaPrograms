@@ -1,62 +1,46 @@
-package com.devsuperior.movieflix.services;
+package com.devsuperior.dscommerce.services;
 
-import java.io.Serializable;
-import java.util.Optional;
-
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.data.domain.Page;
-import org.springframework.data.domain.Pageable;
+import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
-import com.devsuperior.movieflix.dto.UserDTO;
-import com.devsuperior.movieflix.entities.User;
-import com.devsuperior.movieflix.repositories.UserRepository;
-import com.devsuperior.movieflix.services.exceptions.ResourceNotFoundException;
+import com.devsuperior.dscommerce.dto.UserDTO;
+import com.devsuperior.dscommerce.entities.User;
+import com.devsuperior.dscommerce.repositories.UserRepository;
 
 @Service
-public class UserService implements UserDetailsService, Serializable {
-	private static final long serialVersionUID = 1L;
+public class UserService implements UserDetailsService {
 
-	private static Logger logger = LoggerFactory.getLogger(UserService.class);
-	
 	@Autowired
 	private UserRepository repository;
-	
-	@Autowired
-	private AuthService authService;
-	
-	@Transactional
-	public UserDTO findById(Long id) {
-		authService.validateSelfOrAdmin(id);
-		Optional<User> obj = repository.findById(id);
-		User entity = obj.orElseThrow(() -> new ResourceNotFoundException("Entity not found"));
-		return new UserDTO(entity);
-	}
-	
+
 	@Override
 	public UserDetails loadUserByUsername(String username) throws UsernameNotFoundException {
+		
 		User user = repository.findByEmail(username);
-		if(user == null) {
-			logger.error("User not found: " + username);
+		if (user == null) {
 			throw new UsernameNotFoundException("Email not found");
 		}
-		logger.info("User found: " + username);
 		return user;
+	}
+	
+	protected User authenticated() {
+		try {
+			String username = SecurityContextHolder.getContext().getAuthentication().getName();
+			return repository.findByEmail(username);
+		}
+		catch (Exception e) {
+			throw new UsernameNotFoundException("Invalid user");
+		}
 	}
 
 	@Transactional(readOnly = true)
-	public UserDTO getProfile() {
-		User user = authService.authenticated();
-		UserDTO dto = new UserDTO();
-		dto.setId(user.getId());
-		dto.setName(user.getName());
-		dto.setEmail(user.getEmail());
-		return dto;
+	public UserDTO getMe() {
+		User entity = authenticated();
+		return new UserDTO(entity);
 	}
 }

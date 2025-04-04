@@ -1,35 +1,20 @@
-package com.devsuperior.movieflix.services;
+package com.devsuperior.dscommerce.services;
 
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Service;
-import org.springframework.transaction.annotation.Transactional;
 
-import com.devsuperior.movieflix.entities.User;
-import com.devsuperior.movieflix.repositories.UserRepository;
-import com.devsuperior.movieflix.services.exceptions.ForbiddenException;
-import com.devsuperior.movieflix.services.exceptions.UnauthorizedException;
+import com.devsuperior.dscommerce.entities.User;
+import com.devsuperior.dscommerce.services.exceptions.ForbiddenException;
 
 @Service
 public class AuthService {
 
 	@Autowired
-	private UserRepository userRepository;
-
-	@Transactional(readOnly = true)
-	public User authenticated() {
-		try {
-			String username = SecurityContextHolder.getContext().getAuthentication().getName();
-			return userRepository.findByEmail(username); 
-		} catch (Exception e) {
-			throw new UnauthorizedException("Invalid user");
-		}
+	private UserService userService;
 	
-	}
-	
-	public void validateSelfOrAdmin(Long userId) {
-		User user = authenticated();
-		if (!user.getId().equals(userId) && !user.hasRole("ROLE_ADMIN")) {
+	public void validateSelfOrAdmin(long userId) {
+		User me = userService.authenticated();
+		if (!me.hasRole("ROLE_ADMIN") && !me.getId().equals(userId)) {
 			throw new ForbiddenException("Access denied");
 		}
 	}

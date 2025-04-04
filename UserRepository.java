@@ -1,13 +1,10 @@
-package com.devsuperior.movieflix.repositories;
+package com.devsuperior.dscommerce.repositories;
 
 import org.springframework.data.jpa.repository.JpaRepository;
-import org.springframework.stereotype.Repository;
 
-import com.devsuperior.movieflix.entities.User;
+import com.devsuperior.dscommerce.entities.User;
 
-@Repository
-public interface UserRepository extends JpaRepository<User, Long>{
+public interface UserRepository extends JpaRepository<User, Long> {
 
-	User findByEmail(String name);
-	
+	User findByEmail(String email);
 }
