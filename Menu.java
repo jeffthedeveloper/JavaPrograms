@@ -1,9 +1,10 @@
-package headfirst.designpatterns.composite.menu;
+package headfirst.designpatterns.composite.menuiterator;
 
 import java.util.Iterator;
 import java.util.ArrayList;
 
 public class Menu extends MenuComponent {
+	Iterator<MenuComponent> iterator = null;
 	ArrayList<MenuComponent> menuComponents = new ArrayList<MenuComponent>();
 	String name;
 	String description;
@@ -22,7 +23,7 @@ public class Menu extends MenuComponent {
 	}
  
 	public MenuComponent getChild(int i) {
-		return (MenuComponent)menuComponents.get(i);
+		return menuComponents.get(i);
 	}
  
 	public String getName() {
@@ -32,6 +33,15 @@ public class Menu extends MenuComponent {
 	public String getDescription() {
 		return description;
 	}
+
+  
+	public Iterator<MenuComponent> createIterator() {
+		if (iterator == null) {
+			iterator = new CompositeIterator(menuComponents.iterator());
+		}
+		return iterator;
+	}
+ 
  
 	public void print() {
 		System.out.print("\n" + getName());
@@ -40,8 +50,7 @@ public class Menu extends MenuComponent {
   
 		Iterator<MenuComponent> iterator = menuComponents.iterator();
 		while (iterator.hasNext()) {
-			MenuComponent menuComponent = 
-				(MenuComponent)iterator.next();
+			MenuComponent menuComponent = iterator.next();
 			menuComponent.print();
 		}
 	}

@@ -1,6 +1,9 @@
-package headfirst.designpatterns.composite.menu;
+package headfirst.designpatterns.composite.menuiterator;
+
+import java.util.Iterator;
 
 public class MenuItem extends MenuComponent {
+ 
 	String name;
 	String description;
 	boolean vegetarian;
@@ -32,7 +35,11 @@ public class MenuItem extends MenuComponent {
 	public boolean isVegetarian() {
 		return vegetarian;
 	}
-  
+
+	public Iterator<MenuComponent> createIterator() {
+		return new NullIterator();
+	}
+ 
 	public void print() {
 		System.out.print("  " + getName());
 		if (isVegetarian()) {
@@ -41,4 +48,6 @@ public class MenuItem extends MenuComponent {
 		System.out.println(", " + getPrice());
 		System.out.println("     -- " + getDescription());
 	}
+
 }
+

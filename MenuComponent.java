@@ -1,4 +1,6 @@
-package headfirst.designpatterns.composite.menu;
+package headfirst.designpatterns.composite.menuiterator;
+
+import java.util.*;
 
 public abstract class MenuComponent {
    
@@ -24,7 +26,9 @@ public abstract class MenuComponent {
 	public boolean isVegetarian() {
 		throw new UnsupportedOperationException();
 	}
-  
+
+	public abstract Iterator<MenuComponent> createIterator();
+ 
 	public void print() {
 		throw new UnsupportedOperationException();
 	}
