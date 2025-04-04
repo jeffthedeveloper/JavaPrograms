@@ -1,4 +1,4 @@
-package com.devsuperior.bds02.resources.exceptions;
+package com.devsuperior.movieflix.resources.exceptions;
 
 import java.io.Serializable;
 import java.time.Instant;

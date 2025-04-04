@@ -1,4 +1,4 @@
-package com.devsuperior.dslearnbds.entities;
+package com.devsuperior.movieflix.entities;
 
 import java.io.Serializable;
 import java.util.ArrayList;
@@ -43,7 +43,7 @@ public class User implements UserDetails, Serializable{
 	private Set<Role> roles = new HashSet<>();
 	
 	@OneToMany(mappedBy = "user")
-	private List<Notification> notifications = new ArrayList<>();
+	private List<Review> reviews =  new ArrayList<>();
 	
 	public User() {
 	}
@@ -92,10 +92,10 @@ public class User implements UserDetails, Serializable{
 		return roles;
 	}
 
-	public List<Notification> getNotifications() {
-		return notifications;
-	} 
-	
+	public List<Review> getReviews() {
+		return reviews;
+	}
+
 	@Override
 	public int hashCode() {
 		return Objects.hash(id);
